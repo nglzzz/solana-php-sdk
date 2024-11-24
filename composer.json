@@ -3,7 +3,7 @@
     "description": "A PHP SDK for interacting with the Solana blockchain via JSON RPC and WebSocket methods.",
     "type": "library",
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "guzzlehttp/guzzle": "^7.9",
         "ratchet/pawl": "^0.4.1"
     },
