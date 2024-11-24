@@ -19,7 +19,7 @@ jobs:
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1' # Use the PHP version you're targeting
+        php-version: '8.2' # Use PHP 8.2 to meet PHPUnit 11.4 requirements
         extensions: mbstring, curl, dom, json
         coverage: none
 
