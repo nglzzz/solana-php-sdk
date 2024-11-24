@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/PHP-%5E8.0-blue)](https://www.php.net/releases/8.0/)
+![PHPUnit Tests](https://github.com/jopanel/solana-php-sdk/actions/workflows/phpunit.yml/badge.svg)
+
 
 A powerful and easy-to-use PHP SDK for interacting with the Solana blockchain. This library allows developers to interact with Solana's JSON RPC and WebSocket APIs using PHP, enabling seamless integration for blockchain applications.
 
