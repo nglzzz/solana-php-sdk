@@ -22,5 +22,7 @@
             "email": "opanelj@gmail.com"
         }
     ],
+    "homepage": "https://github.com/jopanel/solana-php-sdk",
+    "keywords": ["solana", "blockchain", "php-sdk", "web3", "json-rpc"],
     "minimum-stability": "stable"
 }
