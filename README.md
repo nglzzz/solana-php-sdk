@@ -13,7 +13,7 @@ A powerful and easy-to-use PHP SDK for interacting with the Solana blockchain. T
 - Built-in extensibility for future methods
 - Clean and intuitive API design
 - Open source and community-friendly
-- PHP 8+ Required
+- PHP 8.2+ Required
 
 ## 📚 Installation
 
