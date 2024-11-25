@@ -1,7 +1,7 @@
 # Solana PHP SDK
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![PHP Version](https://img.shields.io/badge/PHP-%5E8.0-blue)](https://www.php.net/releases/8.0/)
+[![PHP Version](https://img.shields.io/badge/PHP-%5E8.2-blue)](https://www.php.net/releases/8.2/)
 ![PHPUnit Tests](https://github.com/jopanel/solana-php-sdk/actions/workflows/phpunit.yml/badge.svg)
 
 
