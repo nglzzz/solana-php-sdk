@@ -1730,3 +1730,504 @@ print_r($simulationResult);
 ```
 
 ---
+
+
+## `accountSubscribe` <a name="accountsubscribe"></a>
+
+### What is `accountSubscribe`?
+
+The `accountSubscribe` WebSocket method subscribes to updates for a specific account. It listens for changes and invokes a callback whenever there’s an update.
+
+- **Parameters:**
+  - **`account`** (string): The public key of the account to monitor.
+  - **Optional:**
+    - `commitment` (string): The level of commitment (e.g., `finalized`, `confirmed`).
+
+- **Response:**
+  - Updates for the account in real-time.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\AccountSubscription;
+
+$subscription = new AccountSubscription();
+
+// Subscribe to account updates
+$subscription->subscribe(
+    '2S3LbfvkbCqNBMqgdH27UJVykb6cdaQ93zWF78s3Xtmq',
+    function ($update) {
+        print_r($update);
+    }
+);
+```
+
+---
+
+## `accountUnsubscribe` <a name="accountunsubscribe"></a>
+
+### What is `accountUnsubscribe`?
+
+The `accountUnsubscribe` WebSocket method unsubscribes from an active account subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\AccountSubscription;
+
+$subscription = new AccountSubscription();
+
+// Unsubscribe from account updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `blockSubscribe` <a name="blocksubscribe"></a>
+
+### What is `blockSubscribe`?
+
+The `blockSubscribe` WebSocket method subscribes to real-time updates about newly confirmed blocks.
+
+- **Parameters:**
+  - **Optional:**
+    - `commitment` (string): Specifies the level of commitment (e.g., `finalized`, `confirmed`, or `processed`).
+
+- **Response:**
+  - Updates about new blocks.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\BlockSubscription;
+
+$subscription = new BlockSubscription();
+
+// Subscribe to block updates
+$subscription->subscribe(
+    function ($update) {
+        print_r($update);
+    },
+    ['commitment' => 'finalized']
+);
+```
+
+---
+
+## `blockUnsubscribe` <a name="blockunsubscribe"></a>
+
+### What is `blockUnsubscribe`?
+
+The `blockUnsubscribe` WebSocket method unsubscribes from an active block subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\BlockSubscription;
+
+$subscription = new BlockSubscription();
+
+// Unsubscribe from block updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `logsSubscribe` <a name="logssubscribe"></a>
+
+### What is `logsSubscribe`?
+
+The `logsSubscribe` WebSocket method subscribes to logs emitted by a specific program or all programs on the Solana blockchain.
+
+- **Parameters:**
+  - **`filter`** (string): A program ID to monitor or `"all"` to monitor all logs.
+  - **Optional:**
+    - `commitment` (string): Specifies the level of commitment (e.g., `finalized`, `confirmed`, or `processed`).
+
+- **Response:**
+  - Real-time logs emitted by the specified program or all programs.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\LogsSubscription;
+
+$subscription = new LogsSubscription();
+
+// Subscribe to logs for a specific program
+$subscription->subscribe(
+    '4izNYzN7uQac8jBDcD7NmuCpS8PqvYiHVSLXF5bY9Zrg',
+    function ($update) {
+        print_r($update);
+    },
+    ['commitment' => 'finalized']
+);
+```
+
+---
+
+## `logsUnsubscribe` <a name="logsunsubscribe"></a>
+
+### What is `logsUnsubscribe`?
+
+The `logsUnsubscribe` WebSocket method unsubscribes from an active logs subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\LogsSubscription;
+
+$subscription = new LogsSubscription();
+
+// Unsubscribe from logs updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `programSubscribe` <a name="programsubscribe"></a>
+
+### What is `programSubscribe`?
+
+The `programSubscribe` WebSocket method subscribes to updates for accounts owned by a specific program.
+
+- **Parameters:**
+  - **`programId`** (string): The public key of the program to monitor.
+  - **Optional:**
+    - `commitment` (string): Specifies the level of commitment (e.g., `finalized`, `confirmed`, or `processed`).
+
+- **Response:**
+  - Real-time updates for accounts owned by the program.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\ProgramSubscription;
+
+$subscription = new ProgramSubscription();
+
+// Subscribe to updates for a specific program
+$subscription->subscribe(
+    '4izNYzN7uQac8jBDcD7NmuCpS8PqvYiHVSLXF5bY9Zrg',
+    function ($update) {
+        print_r($update);
+    },
+    ['commitment' => 'finalized']
+);
+```
+
+---
+
+## `programUnsubscribe` <a name="programunsubscribe"></a>
+
+### What is `programUnsubscribe`?
+
+The `programUnsubscribe` WebSocket method unsubscribes from an active program subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\ProgramSubscription;
+
+$subscription = new ProgramSubscription();
+
+// Unsubscribe from program updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `rootSubscribe` <a name="rootsubscribe"></a>
+
+### What is `rootSubscribe`?
+
+The `rootSubscribe` WebSocket method subscribes to updates about the highest confirmed root of the Solana blockchain.
+
+- **Parameters:** None.
+
+- **Response:**
+  - Real-time updates about the highest confirmed root.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\RootSubscription;
+
+$subscription = new RootSubscription();
+
+// Subscribe to root updates
+$subscription->subscribe(function ($update) {
+    print_r($update);
+});
+```
+
+---
+
+## `rootUnsubscribe` <a name="rootunsubscribe"></a>
+
+### What is `rootUnsubscribe`?
+
+The `rootUnsubscribe` WebSocket method unsubscribes from an active root subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\RootSubscription;
+
+$subscription = new RootSubscription();
+
+// Unsubscribe from root updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `signatureSubscribe` <a name="signaturesubscribe"></a>
+
+### What is `signatureSubscribe`?
+
+The `signatureSubscribe` WebSocket method subscribes to the status of a specific transaction signature on the Solana blockchain.
+
+- **Parameters:**
+  - **`signature`** (string): The transaction signature to monitor.
+  - **Optional:**
+    - `commitment` (string): Specifies the level of commitment (e.g., `finalized`, `confirmed`, or `processed`).
+
+- **Response:**
+  - Updates about the status of the specified transaction signature.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\SignatureSubscription;
+
+$subscription = new SignatureSubscription();
+
+// Subscribe to a transaction signature
+$subscription->subscribe(
+    '5yJg7hzSYfz6n9p8Nnh6PtqVjfzZKz8Xf7LvUgJb7Bm',
+    function ($update) {
+        print_r($update);
+    },
+    ['commitment' => 'finalized']
+);
+```
+
+---
+
+## `signatureUnsubscribe` <a name="signatureunsubscribe"></a>
+
+### What is `signatureUnsubscribe`?
+
+The `signatureUnsubscribe` WebSocket method unsubscribes from an active signature subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\SignatureSubscription;
+
+$subscription = new SignatureSubscription();
+
+// Unsubscribe from signature updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `slotSubscribe` <a name="slotsubscribe"></a>
+
+### What is `slotSubscribe`?
+
+The `slotSubscribe` WebSocket method subscribes to updates about the current slot on the Solana blockchain.
+
+- **Parameters:** None.
+
+- **Response:**
+  - Real-time updates about the current slot, including parent and root slot information.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\SlotSubscription;
+
+$subscription = new SlotSubscription();
+
+// Subscribe to slot updates
+$subscription->subscribe(function ($update) {
+    print_r($update);
+});
+```
+
+---
+
+## `slotUnsubscribe` <a name="slotunsubscribe"></a>
+
+### What is `slotUnsubscribe`?
+
+The `slotUnsubscribe` WebSocket method unsubscribes from an active slot subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\SlotSubscription;
+
+$subscription = new SlotSubscription();
+
+// Unsubscribe from slot updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `slotsUpdatesSubscribe` <a name="slotsupdatessubscribe"></a>
+
+### What is `slotsUpdatesSubscribe`?
+
+The `slotsUpdatesSubscribe` WebSocket method subscribes to updates about slot activity on the Solana blockchain.
+
+- **Parameters:** None.
+
+- **Response:**
+  - Real-time updates about new slot activity, including slot number, parent, and other metadata.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\SlotsUpdatesSubscription;
+
+$subscription = new SlotsUpdatesSubscription();
+
+// Subscribe to slots updates
+$subscription->subscribe(function ($update) {
+    print_r($update);
+});
+```
+
+---
+
+## `slotsUpdatesUnsubscribe` <a name="slotsupdatesunsubscribe"></a>
+
+### What is `slotsUpdatesUnsubscribe`?
+
+The `slotsUpdatesUnsubscribe` WebSocket method unsubscribes from an active slots updates subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\SlotsUpdatesSubscription;
+
+$subscription = new SlotsUpdatesSubscription();
+
+// Unsubscribe from slots updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---
+
+## `voteSubscribe` <a name="votesubscribe"></a>
+
+### What is `voteSubscribe`?
+
+The `voteSubscribe` WebSocket method subscribes to updates about vote accounts on the Solana blockchain.
+
+- **Parameters:** None.
+
+- **Response:**
+  - Real-time updates about vote account activity.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\VoteSubscription;
+
+$subscription = new VoteSubscription();
+
+// Subscribe to vote updates
+$subscription->subscribe(function ($update) {
+    print_r($update);
+});
+```
+
+---
+
+## `voteUnsubscribe` <a name="voteunsubscribe"></a>
+
+### What is `voteUnsubscribe`?
+
+The `voteUnsubscribe` WebSocket method unsubscribes from an active vote account subscription.
+
+- **Parameters:**
+  - **`subscriptionId`** (integer): The ID of the active subscription.
+
+---
+
+### Example Usage
+
+```php
+use JosephOpanel\SolanaSDK\WebSocket\VoteSubscription;
+
+$subscription = new VoteSubscription();
+
+// Unsubscribe from vote updates
+$subscription->unsubscribe(1); // Replace 1 with a valid subscription ID
+```
+
+---

@@ -93,6 +93,27 @@ For detailed information about all available methods, visit the [API Documentati
 - [`requestAirdrop`](docs/API.md#requestairdrop)
 
 
+### Web Socket Methods
+
+- [`accountSubscribe`](docs/API.md#accountsubscribe)
+- [`accountUnsubscribe`](docs/API.md#accountunsubscribe)
+- [`blockSubscribe`](docs/API.md#blocksubscribe)
+- [`blockUnsubscribe`](docs/API.md#blockunsubscribe)
+- [`logsSubscribe`](docs/API.md#logssubscribe)
+- [`logsUnsubscribe`](docs/API.md#logsunsubscribe)
+- [`programSubscribe`](docs/API.md#programsubscribe)
+- [`programUnsubscribe`](docs/API.md#programunsubscribe)
+- [`rootSubscribe`](docs/API.md#rootsubscribe)
+- [`rootUnsubscribe`](docs/API.md#rootunsubscribe)
+- [`signatureSubscribe`](docs/API.md#signaturesubscribe)
+- [`signatureUnsubscribe`](docs/API.md#signatureunsubscribe)
+- [`slotSubscribe`](docs/API.md#slotsubscribe)
+- [`slotUnsubscribe`](docs/API.md#slotunsubscribe)
+- [`slotsUpdatesSubscribe`](docs/API.md#slotsupdatessubscribe)
+- [`slotsUpdatesUnsubscribe`](docs/API.md#slotsupdatesunsubscribe)
+- [`voteSubscribe`](docs/API.md#votesubscribe)
+- [`voteUnsubscribe`](docs/API.md#voteunsubscribe)
+
 ## 💻 Contributing
 
 Contributions are welcome! If you'd like to improve the SDK or add new features, feel free to fork the repository and submit a pull request.
