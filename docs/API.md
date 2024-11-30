@@ -26,9 +26,10 @@ The `getAccountInfo` RPC method retrieves detailed information about an account,
 
 - **RPC Method:** `getAccountInfo`
 - **Parameters:**
-  - **`account`** (string): The public key of the account to query.
-  - **Optional:**
+  - **`account`** (string): The public key of the account to query (Base58 or public wallet string).
+  - **Optional Parameters (array):**
     - `commitment` (string): Specifies the state of the ledger to query (e.g., `finalized`, `confirmed`, or `processed`).
+    - `encoding` (string): Specifies how to encode the account data (e.g., `base64`, `jsonParsed`).
 
 - **Response:**
   - `lamports` (integer): The balance of the account in lamports.
@@ -41,15 +42,15 @@ The `getAccountInfo` RPC method retrieves detailed information about an account,
 
 ### Example Usage
 
+#### Default Options
 ```php
 use JosephOpanel\SolanaSDK\Endpoints\JsonRPC\Account;
 
 $account = new Account($rpc);
 
-// Get information about an account
+// Get information about an account with default options
 $accountInfo = $account->getAccountInfo('4izNYzN7uQac8jBDcD7NmuCpS8PqvYiHVSLXF5bY9Zrg');
 print_r($accountInfo);
-
 ```
 
 ---
