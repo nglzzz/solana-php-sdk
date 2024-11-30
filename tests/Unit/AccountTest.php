@@ -87,13 +87,19 @@ class AccountTest extends TestCase {
 	        ]);
 
 	    $account = new Account($mockRpc);
+
+	    // Call the method
 	    $result = $account->getProgramAccounts('programPubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']);
 
+	    // Assertions
 	    $this->assertIsArray($result);
 	    $this->assertCount(2, $result);
 	    $this->assertEquals('account1Pubkey', $result[0]['pubkey']);
+	    $this->assertEquals(1000000, $result[0]['account']['lamports']);
+	    $this->assertEquals('account2Pubkey', $result[1]['pubkey']);
 	    $this->assertEquals(2000000, $result[1]['account']['lamports']);
 	}
+
 
 	public function testGetTokenAccountBalance(): void {
 	    $mockRpc = $this->createMock(SolanaRPC::class);

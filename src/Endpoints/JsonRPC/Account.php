@@ -61,11 +61,34 @@ class Account {
     }
 
     public function getProgramAccounts(string $programId, array $config = []): array {
+        // Convert the program ID to Base58 if necessary
+        $programId = $this->validateAndConvertToBase58($programId);
+
+        // Validate program ID is in Base58
+        if (!$this->isValidBase58($programId)) {
+            return [
+                'error' => true,
+                'code' => 1001,
+                'message' => 'Invalid program ID provided.',
+            ];
+        }
+
+        // Build the parameters for the RPC call
         $params = [$programId];
         if (!empty($config)) {
             $params[] = $config;
         }
-        return $this->rpc->call('getProgramAccounts', $params);
+
+        // Perform the RPC call
+        try {
+            return $this->rpc->call('getProgramAccounts', $params);
+        } catch (\Exception $e) {
+            return [
+                'error' => true,
+                'code' => 1002,
+                'message' => 'RPC error: ' . $e->getMessage(),
+            ];
+        }
     }
 
     public function getTokenAccountBalance(string $address, string $commitment = 'finalized'): array {
