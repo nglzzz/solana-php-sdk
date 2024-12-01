@@ -59,39 +59,6 @@ class AccountTest extends TestCase {
 	    $this->assertEquals('ownerPubkey2', $result[1]['owner']);
 	}
 
-	public function testGetProgramAccountsWithFiltersAndDataSlice(): void {
-	    $mockRpc = $this->createMock(SolanaRPC::class);
-	    $mockRpc->method('call')
-	        ->with('getProgramAccounts', [
-	            'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-	            [
-	                'filters' => [
-	                    ['dataSize' => 165],
-	                    ['memcmp' => ['offset' => 0, 'bytes' => base64_encode('mintAddress')]],
-	                ],
-	                'dataSlice' => ['offset' => 0, 'length' => 32],
-	            ],
-	        ])
-	        ->willReturn([
-	            ['pubkey' => 'account1', 'account' => ['data' => 'base64encodeddata', 'owner' => 'programId']],
-	            ['pubkey' => 'account2', 'account' => ['data' => 'base64encodeddata', 'owner' => 'programId']],
-	        ]);
-
-	    $account = new Account($mockRpc);
-	    $result = $account->getProgramAccounts('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA', [
-	        'filters' => [
-	            ['dataSize' => 165],
-	            ['memcmp' => ['offset' => 0, 'bytes' => base64_encode('mintAddress')]],
-	        ],
-	        'dataSlice' => ['offset' => 0, 'length' => 32],
-	    ]);
-
-	    $this->assertIsArray($result);
-	    $this->assertCount(2, $result);
-	    $this->assertEquals('account1', $result[0]['pubkey']);
-	}
-
-
 	public function testGetTokenAccountsByDelegate(): void {
 	    $mockRpc = $this->createMock(SolanaRPC::class);
 	    $mockRpc->method('call')

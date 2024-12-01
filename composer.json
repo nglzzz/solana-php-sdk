@@ -26,5 +26,5 @@
     "homepage": "https://github.com/jopanel/solana-php-sdk",
     "keywords": ["solana", "blockchain", "php-sdk", "web3", "json-rpc"],
     "minimum-stability": "stable",
-    "version": "2.0.5"
+    "version": "2.0.6"
 }

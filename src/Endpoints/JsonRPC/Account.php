@@ -62,8 +62,6 @@ class Account {
 
     public function getProgramAccounts(string $programId, array $config = []): array {
         // Validate program ID
-        $programId = $this->validateAndConvertToBase58($programId);
-
         if (!$this->isValidBase58($programId)) {
             return [
                 'error' => true,
@@ -76,18 +74,23 @@ class Account {
         $params = [$programId];
 
         if (!empty($config)) {
+            // Check for filters or dataSlice in the config
             if (isset($config['filters'])) {
-                $filters = $config['filters'];
-                foreach ($filters as &$filter) {
-                    if (isset($filter['memcmp']['bytes']) && $this->isValidBase58($filter['memcmp']['bytes'])) {
-                        // Convert Base58 to Base64 for memcmp filters
-                        $decoder = new Base58;
-                        $filter['memcmp']['bytes'] = base64_encode($decoder->decode($filter['memcmp']['bytes']));
+                foreach ($config['filters'] as &$filter) {
+                    if (isset($filter['memcmp']['bytes'])) {
+                        // Validate Base58 for memcmp bytes
+                        if (!$this->isValidBase58($filter['memcmp']['bytes'])) {
+                            return [
+                                'error' => true,
+                                'code' => 1003,
+                                'message' => 'Invalid Base58 data in memcmp filter.',
+                            ];
+                        }
                     }
                 }
-                $config['filters'] = $filters;
             }
-            $params[] = $config;
+
+            $params[] = $config; // Add config to params only if provided
         }
 
         // Perform RPC call
@@ -101,7 +104,6 @@ class Account {
             ];
         }
     }
-
 
 
     public function getTokenAccountBalance(string $address, string $commitment = 'finalized'): array {
