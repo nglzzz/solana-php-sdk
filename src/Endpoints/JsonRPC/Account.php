@@ -157,9 +157,13 @@ class Account {
 
         $params[] = $configKey;
 
+        // Add the encoding parameter
+        $params[] = ['encoding' => 'jsonParsed'];
+
         // Perform the RPC call
         return $this->rpc->call('getTokenAccountsByOwner', $params);
     }
+
 
     public function getTokenLargestAccounts(string $mint, string $commitment = 'finalized'): array {
         $response = $this->rpc->call('getTokenLargestAccounts', [$mint, ['commitment' => $commitment]]);

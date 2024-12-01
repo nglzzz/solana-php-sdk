@@ -146,27 +146,38 @@ class AccountTest extends TestCase {
 	    $mockRpc->method('call')
 	        ->with('getTokenAccountsByOwner', [
 	            'ownerPubkey',
-	            ['mint' => 'mintPubkey']
+	            ['mint' => 'mintPubkey'],
+	            ['encoding' => 'jsonParsed'], // Add the encoding parameter
 	        ])
 	        ->willReturn([
-	            [
-	                'pubkey' => 'account1',
-	                'account' => [
-	                    'lamports' => 1000,
-	                    'owner' => 'ownerPubkey',
-	                    'data' => ['parsed' => ['info' => 'accountData1']],
-	                    'executable' => false,
-	                    'rentEpoch' => 150,
+	            'value' => [ // Updated to match the actual response structure
+	                [
+	                    'pubkey' => 'account1',
+	                    'account' => [
+	                        'lamports' => 1000,
+	                        'owner' => 'ownerPubkey',
+	                        'data' => [
+	                            'parsed' => [
+	                                'info' => 'accountData1',
+	                            ],
+	                        ],
+	                        'executable' => false,
+	                        'rentEpoch' => 150,
+	                    ],
 	                ],
-	            ],
-	            [
-	                'pubkey' => 'account2',
-	                'account' => [
-	                    'lamports' => 2000,
-	                    'owner' => 'ownerPubkey',
-	                    'data' => ['parsed' => ['info' => 'accountData2']],
-	                    'executable' => false,
-	                    'rentEpoch' => 151,
+	                [
+	                    'pubkey' => 'account2',
+	                    'account' => [
+	                        'lamports' => 2000,
+	                        'owner' => 'ownerPubkey',
+	                        'data' => [
+	                            'parsed' => [
+	                                'info' => 'accountData2',
+	                            ],
+	                        ],
+	                        'executable' => false,
+	                        'rentEpoch' => 151,
+	                    ],
 	                ],
 	            ],
 	        ]);
@@ -174,11 +185,13 @@ class AccountTest extends TestCase {
 	    $account = new Account($mockRpc);
 	    $result = $account->getTokenAccountsByOwner('ownerPubkey', ['mint' => 'mintPubkey']);
 
-	    $this->assertIsArray($result);
-	    $this->assertCount(2, $result);
-	    $this->assertEquals('account1', $result[0]['pubkey']);
-	    $this->assertEquals('accountData2', $result[1]['account']['data']['parsed']['info']);
+	    // Assertions to verify the structure and content of the result
+	    $this->assertIsArray($result['value']);
+	    $this->assertCount(2, $result['value']);
+	    $this->assertEquals('account1', $result['value'][0]['pubkey']);
+	    $this->assertEquals('accountData2', $result['value'][1]['account']['data']['parsed']['info']);
 	}
+
 
 	public function testGetTokenLargestAccounts(): void {
 	    $mockRpc = $this->createMock(SolanaRPC::class);
