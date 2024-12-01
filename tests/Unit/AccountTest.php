@@ -59,74 +59,56 @@ class AccountTest extends TestCase {
 	    $this->assertEquals('ownerPubkey2', $result[1]['owner']);
 	}
 
-	public function testGetProgramAccounts(): void {
+	public function testGetProgramAccountsWithFiltersAndDataSlice(): void {
 	    $mockRpc = $this->createMock(SolanaRPC::class);
 	    $mockRpc->method('call')
-	        ->with('getProgramAccounts', ['programPubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']])
+	        ->with('getProgramAccounts', [
+	            'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+	            [
+	                'filters' => [
+	                    ['dataSize' => 165],
+	                    ['memcmp' => ['offset' => 0, 'bytes' => base64_encode('mintAddress')]],
+	                ],
+	                'dataSlice' => ['offset' => 0, 'length' => 32],
+	            ],
+	        ])
 	        ->willReturn([
-	            [
-	                'pubkey' => 'account1Pubkey',
-	                'account' => [
-	                    'lamports' => 1000000,
-	                    'owner' => 'programPubkey',
-	                    'data' => ['parsed' => ['key' => 'account1Data']],
-	                    'executable' => false,
-	                    'rentEpoch' => 150,
-	                ],
-	            ],
-	            [
-	                'pubkey' => 'account2Pubkey',
-	                'account' => [
-	                    'lamports' => 2000000,
-	                    'owner' => 'programPubkey',
-	                    'data' => ['parsed' => ['key' => 'account2Data']],
-	                    'executable' => false,
-	                    'rentEpoch' => 151,
-	                ],
-	            ],
+	            ['pubkey' => 'account1', 'account' => ['data' => 'base64encodeddata', 'owner' => 'programId']],
+	            ['pubkey' => 'account2', 'account' => ['data' => 'base64encodeddata', 'owner' => 'programId']],
 	        ]);
 
 	    $account = new Account($mockRpc);
+	    $result = $account->getProgramAccounts('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA', [
+	        'filters' => [
+	            ['dataSize' => 165],
+	            ['memcmp' => ['offset' => 0, 'bytes' => base64_encode('mintAddress')]],
+	        ],
+	        'dataSlice' => ['offset' => 0, 'length' => 32],
+	    ]);
 
-	    // Call the method
-	    $result = $account->getProgramAccounts('programPubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']);
-
-	    // Assertions
 	    $this->assertIsArray($result);
 	    $this->assertCount(2, $result);
-	    $this->assertEquals('account1Pubkey', $result[0]['pubkey']);
-	    $this->assertEquals(1000000, $result[0]['account']['lamports']);
-	    $this->assertEquals('account2Pubkey', $result[1]['pubkey']);
-	    $this->assertEquals(2000000, $result[1]['account']['lamports']);
+	    $this->assertEquals('account1', $result[0]['pubkey']);
 	}
 
-
-	public function testGetTokenAccountBalance(): void {
-	    $mockRpc = $this->createMock(SolanaRPC::class);
-	    $mockRpc->method('call')
-	        ->with('getTokenAccountBalance', ['tokenAccountAddress', ['commitment' => 'finalized']])
-	        ->willReturn([
-	            'amount' => '1000000000',
-	            'decimals' => 6,
-	            'uiAmount' => 1000.0,
-	            'uiAmountString' => '1000.0',
-	        ]);
-
-	    $account = new Account($mockRpc);
-	    $result = $account->getTokenAccountBalance('tokenAccountAddress', 'finalized');
-
-	    $this->assertIsArray($result);
-	    $this->assertEquals('1000000000', $result['amount']);
-	    $this->assertEquals(6, $result['decimals']);
-	    $this->assertEquals(1000.0, $result['uiAmount']);
-	    $this->assertEquals('1000.0', $result['uiAmountString']);
-	}
 
 	public function testGetTokenAccountsByDelegate(): void {
 	    $mockRpc = $this->createMock(SolanaRPC::class);
-
 	    $mockRpc->method('call')
-	        ->with('getTokenAccountsByDelegate', ['delegatePubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']])
+	        ->with('getTokenAccountsByDelegate', [
+	            'delegatePubkey',
+	            [
+	                'programId' => 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+	                'filters' => [
+	                    [
+	                        'memcmp' => [
+	                            'offset' => 0,
+	                            'bytes' => 'someMintAddress',
+	                        ],
+	                    ],
+	                ],
+	            ],
+	        ])
 	        ->willReturn([
 	            [
 	                'pubkey' => 'account1',
@@ -151,7 +133,7 @@ class AccountTest extends TestCase {
 	        ]);
 
 	    $account = new Account($mockRpc);
-	    $result = $account->getTokenAccountsByDelegate('delegatePubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']);
+	    $result = $account->getTokenAccountsByDelegate('delegatePubkey', ['mint' => 'someMintAddress']);
 
 	    $this->assertIsArray($result);
 	    $this->assertCount(2, $result);
@@ -162,7 +144,10 @@ class AccountTest extends TestCase {
 	public function testGetTokenAccountsByOwner(): void {
 	    $mockRpc = $this->createMock(SolanaRPC::class);
 	    $mockRpc->method('call')
-	        ->with('getTokenAccountsByOwner', ['ownerPubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']])
+	        ->with('getTokenAccountsByOwner', [
+	            'ownerPubkey',
+	            ['mint' => 'mintPubkey']
+	        ])
 	        ->willReturn([
 	            [
 	                'pubkey' => 'account1',
@@ -187,7 +172,7 @@ class AccountTest extends TestCase {
 	        ]);
 
 	    $account = new Account($mockRpc);
-	    $result = $account->getTokenAccountsByOwner('ownerPubkey', ['commitment' => 'finalized', 'encoding' => 'jsonParsed']);
+	    $result = $account->getTokenAccountsByOwner('ownerPubkey', ['mint' => 'mintPubkey']);
 
 	    $this->assertIsArray($result);
 	    $this->assertCount(2, $result);

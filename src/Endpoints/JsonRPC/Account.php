@@ -61,10 +61,9 @@ class Account {
     }
 
     public function getProgramAccounts(string $programId, array $config = []): array {
-        // Convert the program ID to Base58 if necessary
+        // Validate program ID
         $programId = $this->validateAndConvertToBase58($programId);
 
-        // Validate program ID is in Base58
         if (!$this->isValidBase58($programId)) {
             return [
                 'error' => true,
@@ -73,13 +72,25 @@ class Account {
             ];
         }
 
-        // Build the parameters for the RPC call
+        // Build parameters
         $params = [$programId];
+
         if (!empty($config)) {
+            if (isset($config['filters'])) {
+                $filters = $config['filters'];
+                foreach ($filters as &$filter) {
+                    if (isset($filter['memcmp']['bytes']) && $this->isValidBase58($filter['memcmp']['bytes'])) {
+                        // Convert Base58 to Base64 for memcmp filters
+                        $decoder = new Base58;
+                        $filter['memcmp']['bytes'] = base64_encode($decoder->decode($filter['memcmp']['bytes']));
+                    }
+                }
+                $config['filters'] = $filters;
+            }
             $params[] = $config;
         }
 
-        // Perform the RPC call
+        // Perform RPC call
         try {
             return $this->rpc->call('getProgramAccounts', $params);
         } catch (\Exception $e) {
@@ -91,24 +102,62 @@ class Account {
         }
     }
 
+
+
     public function getTokenAccountBalance(string $address, string $commitment = 'finalized'): array {
         $response = $this->rpc->call('getTokenAccountBalance', [$address, ['commitment' => $commitment]]);
         return $response ?? []; // Return the response or an empty array
     }
 
     public function getTokenAccountsByDelegate(string $delegate, array $config = []): array {
-        $params = [$delegate];
-        if (!empty($config)) {
-            $params[] = $config;
+        $params = [
+            $delegate, // The delegate public key
+        ];
+
+        $options = [];
+
+        // Add the SPL Token Program ID by default if not explicitly provided
+        $options['programId'] = $config['programId'] ?? 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
+
+        // If a mint is specified, add it as a filter
+        if (!empty($config['mint'])) {
+            $options['filters'] = [
+                [
+                    'memcmp' => [
+                        'offset' => 0,
+                        'bytes' => $config['mint'],
+                    ],
+                ],
+            ];
         }
+
+        // Include any additional options (e.g., encoding, commitment)
+        foreach (['encoding', 'commitment'] as $key) {
+            if (!empty($config[$key])) {
+                $options[$key] = $config[$key];
+            }
+        }
+
+        $params[] = $options;
+
+        // Perform the RPC call
         return $this->rpc->call('getTokenAccountsByDelegate', $params);
     }
 
     public function getTokenAccountsByOwner(string $owner, array $config = []): array {
         $params = [$owner];
-        if (!empty($config)) {
-            $params[] = $config;
+
+        // Ensure only valid keys are sent
+        $validKeys = ['mint', 'programId'];
+        $configKey = array_intersect_key($config, array_flip($validKeys));
+
+        if (count($configKey) !== 1) {
+            throw new InvalidArgumentException('Invalid config: specify exactly one of "mint" or "programId".');
         }
+
+        $params[] = $configKey;
+
+        // Perform the RPC call
         return $this->rpc->call('getTokenAccountsByOwner', $params);
     }
 
@@ -164,7 +213,7 @@ class Account {
      */
     private function toBase58(string $binaryData): string
     {
-        $base58 = new \StephenHill\Base58();
+        $base58 = new Base58();
         return $base58->encode($binaryData);
     }
 
