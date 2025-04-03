@@ -41,7 +41,7 @@ class SolanaRPC {
                 throw new \Exception("RPC Error: " . $data['error']['message']);
             }
 
-            return $data['result'];
+            return \is_scalar($data['result']) ? $data : $data['result'];
         } catch (RequestException $e) {
             throw new \Exception("HTTP Request Error: " . $e->getMessage());
         }
